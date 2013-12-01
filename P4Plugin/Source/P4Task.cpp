@@ -314,6 +314,7 @@ bool P4Task::Dispatch(UnityCommand cmd, const std::vector<string>& args)
 // Initialize the perforce client
 bool P4Task::Connect()
 {   
+    m_Connection->InfoLine("DEBUG:connect -------------------------------------");
     // If connection is still active then return success
     if ( IsConnected() )
         return Login();
@@ -450,6 +451,7 @@ bool P4Task::IsOnline()
 
 bool P4Task::Login()
 {    
+    m_Connection->InfoLine("DEBUG:login -------------------------------------");
 #ifdef PERFORCE
     // First check if we're already logged in
     P4Command* p4c = LookupCommand("login");
@@ -541,7 +543,7 @@ bool P4Task::Login()
     }
 #endif
 
-    return true; // root reused
+    return true;
 }
 
 void P4Task::Logout()
@@ -612,10 +614,14 @@ bool P4Task::IsConnected()
     std::string line;
     while (cppipe->ReadLine(line))
     {
-        m_Connection->Log().Info() << line << "\n";
+        m_Connection->InfoLine(line);
+        if (line == "fatal: Not a git repository (or any of the parent directories): .git")
+        {
+            NotifyOffline("Login failed");
+            return false; // error login
+        }
     }
-
-    return false;
+    return true;
 #endif
 }
 
@@ -682,7 +688,7 @@ APOpen P4Task::RunCommand(const std::string& cmd)
     string cmdline = "\"";
     cmdline += m_GitPath + "\" ";
     cmdline += cmd;
-    m_Connection->Log().Info() << cmdline << Endl;
+    m_Connection->InfoLine(cmdline);
     try
     {
         return APOpen(new POpen(cmdline));
