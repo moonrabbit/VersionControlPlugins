@@ -19,6 +19,10 @@ struct AutoHandle
     HANDLE    handle;
 };
 
+#else
+
+#include <unistd.h>
+
 #endif
 
 #include <string>
