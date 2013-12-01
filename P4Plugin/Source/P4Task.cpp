@@ -314,7 +314,6 @@ bool P4Task::Dispatch(UnityCommand cmd, const std::vector<string>& args)
 // Initialize the perforce client
 bool P4Task::Connect()
 {   
-#ifdef PERFORCE
     // If connection is still active then return success
     if ( IsConnected() )
         return Login();
@@ -324,6 +323,8 @@ bool P4Task::Connect()
     if ( m_P4Connect && !Disconnect()) return false;
 
     Error err;
+
+#ifdef PERFORCE
     m_Client.SetProg( "Unity" );
     m_Client.SetVersion( "1.0" );
 
@@ -339,9 +340,11 @@ bool P4Task::Connect()
     m_Client.SetClient(m_ClientConfig.c_str());
 
     m_Client.Init( &err );
+#endif
 
     VCSStatus status = errorToVCSStatus(err);
 
+#ifdef PERFORCE
     // Retry in case of unicode needs to be enabled on client    
     if (HasUnicodeNeededError(status))
     {
@@ -351,9 +354,11 @@ bool P4Task::Connect()
         m_Client.Init( &err );
         VCSStatus status = errorToVCSStatus(err);
     }
+#endif
 
     if (status.size())
     {
+#ifdef PERFORCE
         // If errors are not about connection becoming offline
         // send messages to Unity.
         if (P4Command::HandleOnlineStatusOnError(&err))
@@ -363,6 +368,7 @@ bool P4Task::Connect()
             ;
         }
         else
+#endif
         {
             SendToConnection(*m_Connection, status, MAProtocol);
         }
@@ -373,16 +379,14 @@ bool P4Task::Connect()
 
     m_P4Connect = true;
 
+#ifdef PERFORCE
     m_Client.SetVar("enableStreams");
     m_Client.SetProtocol("enableStreams", "");
+#endif
 
     // We enforce ticket based authentication since that
     // is supported on every security level.
     return Login();
-#else
-    m_P4Connect = true;
-    return true;
-#endif
 }
 
 void P4Task::NotifyOffline(const string& reason)
@@ -446,6 +450,7 @@ bool P4Task::IsOnline()
 
 bool P4Task::Login()
 {    
+#ifdef PERFORCE
     // First check if we're already logged in
     P4Command* p4c = LookupCommand("login");
     vector<string> args;
@@ -534,6 +539,7 @@ bool P4Task::Login()
     {
         ; // TODO: do the stuff
     }
+#endif
 
     return true; // root reused
 }
@@ -542,9 +548,11 @@ void P4Task::Logout()
 {
     m_IsOnline = false;
 
+#ifdef PERFORCE
     P4Command* p4c = LookupCommand("logout");
     CommandArgs args;
     p4c->Run(*this, args); 
+#endif
 }
 
 // Finalise the perforce client 
@@ -574,8 +582,20 @@ bool P4Task::Disconnect()
         return false;
 #else
     m_IsOnline = false;
+
+    if ( !m_P4Connect ) // Nothing to do?
+    {
+        return true;
+    }
+
     m_P4Connect = false;
 
+    Error err;
+    VCSStatus status = errorToVCSStatus(err);
+    SendToConnection(*m_Connection, status, MAProtocol);
+
+    if( err.Test() )
+        return false;
 #endif
     return true;
 }
@@ -640,9 +660,9 @@ bool P4Task::HasUnicodeNeededError( VCSStatus status )
 
 void P4Task::EnableUTF8Mode()
 {
+#ifdef PERFORCE
     CharSetApi::CharSet cs = CharSetApi::UTF_8;
 
-#ifdef PERFORCE
     m_Client.SetTrans( cs, cs, cs, cs );
     m_Client.SetCharset("utf8");
 #endif
@@ -654,8 +674,6 @@ void P4Task::DisableUTF8Mode()
     m_Client.SetCharset("");
     CharSetApi::CharSet cs = CharSetApi::NOCONV;
     m_Client.SetTrans( cs, -2, -2, -2 );
-#else
-    CharSetApi::CharSet cs = CharSetApi::NOCONV;
 #endif
 }
 

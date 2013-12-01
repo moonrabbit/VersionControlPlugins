@@ -18,13 +18,15 @@ public:
         }
         
         ClearStatus();
-        
+       
+#ifdef PERFORCE 
         if (!task.CommandRun("logout", this))
         {
             string errorMessage = GetStatusMessage();
             Conn().Log().Fatal() << errorMessage << Endl;
         }
-        
+#endif
+
         return true;
     }
     

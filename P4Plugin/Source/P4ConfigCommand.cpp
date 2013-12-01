@@ -94,6 +94,18 @@ public:
         }
 #endif
 
+#ifdef GIT
+        else if (key == "vcPerforceServer")
+        {
+            if (value.empty())
+                value = "perforce";
+            
+            string::size_type i = (StartsWith(value, "ssl:") ? value.substr(4) : value).find(":");
+            if (i == string::npos)
+                value += ":1666"; // default port
+            task.SetP4Port(value);
+        }
+#endif
         else if (key == "pluginVersions")
         {
             int sel = SelectVersion(args);
@@ -115,11 +127,11 @@ public:
             Conn().DataLine("1");
 
 #ifdef GIT
-            Conn().DataLine("vcGitServer");
+            Conn().DataLine("vcPerforceServer");
             Conn().DataLine("Git URL", MAConfig);
             Conn().DataLine("The git server using format: git@hostname:repo. Hostname defaults to 'localhost' and port defaults to 22", MAConfig);
             Conn().DataLine("localhost");
-            Conn().DataLine("0"); // 
+            Conn().DataLine("1"); // 
 #endif
 
 #ifdef PERFORCE
@@ -182,9 +194,15 @@ public:
         }
         else if (key == "end")
         {
+#ifdef PERFORCE
             task.Logout();
             task.Disconnect();
             task.DisableUTF8Mode();
+#endif
+
+#ifdef GIT
+            task.Disconnect();
+#endif
         }
         else 
         {
