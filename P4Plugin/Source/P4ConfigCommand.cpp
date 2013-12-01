@@ -33,25 +33,22 @@ public:
         ClearStatus();
         
         string logValue = value;
+#ifdef PERFORCE
         if (key == "vcPerforcePassword")
             logValue = "*";
-
+#endif
         Conn().Log().Info() << "Got config " << key << " = '" << logValue << "'" << Endl;
 
-        // This command actually handles several commands all 
-        // concerning connecting to the perforce server
-        if (key == "vcPerforceUsername") 
-        {
-            task.SetP4User(value);
-        }
-        else if (key == "vcPerforceWorkspace")
-        {
-            task.SetP4Client(value);
-        }
-        else if (key == "projectPath")
+        if (key == "projectPath")
         {
             task.SetProjectPath(TrimEnd(value));
             Conn().Log().Info() << "Set projectPath to" << value << Endl;
+        }
+        else if (key == "pluginVersions")
+        {
+            int sel = SelectVersion(args);
+            Conn().DataLine(sel, MAConfig); 
+            Conn().Log().Info() << "Selected plugin protocol version " << sel << Endl;
         }
         else if (key == "vcSharedLogLevel")
         {
@@ -64,6 +61,17 @@ public:
             else if (value == "fatal")
                 level = LOG_FATAL;
             Conn().Log().SetLogLevel(level);
+        }
+#ifdef PERFORCE
+        // This command actually handles several commands all 
+        // concerning connecting to the perforce server
+        if (key == "vcPerforceUsername") 
+        {
+            task.SetP4User(value);
+        }
+        else if (key == "vcPerforceWorkspace")
+        {
+            task.SetP4Client(value);
         }
         else if (key == "vcPerforcePassword")
         {
@@ -84,6 +92,8 @@ public:
         {
             task.SetP4Host(value);
         }
+#endif
+
         else if (key == "pluginVersions")
         {
             int sel = SelectVersion(args);
