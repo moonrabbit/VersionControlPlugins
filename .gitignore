@@ -1,4 +1,5 @@
 *.o
+*.swp
 Build
 PerforcePlugin
 SubversionPlugin
