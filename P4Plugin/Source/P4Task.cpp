@@ -23,6 +23,8 @@
 #undef SetPort
 #endif
 
+#define GIT
+
 using namespace std;
 
 // Clean up messages to make it look nicer in Unity
@@ -543,7 +545,29 @@ bool P4Task::Login()
     }
 #endif
 
+#ifdef GIT
+    static const std::string remoteOriginUrlPrefix = "remote.origin.url=";
+    std::string cmd = "config -l";
+    APOpen cppipe = RunCommand(cmd);
+
+    std::string line;
+    while (cppipe->ReadLine(line))
+    {
+        // DEBUG: m_Connection->InfoLine(line);
+        if (line.compare(0, remoteOriginUrlPrefix.length(), remoteOriginUrlPrefix) == 0)
+        {
+            std::string savedRemoteOriginUrl = line.substr(remoteOriginUrlPrefix.length());
+            if (savedRemoteOriginUrl != m_PortConfig)
+            {
+                m_Connection->InfoLine("remote origin url mismatched:" + savedRemoteOriginUrl);
+
+                NotifyOffline("Login failed");
+                return false; // error login
+            }
+        }
+    }
     return true;
+#endif
 }
 
 void P4Task::Logout()
@@ -607,14 +631,16 @@ bool P4Task::IsConnected()
 {
 #ifdef PERFORCE
     return (m_P4Connect && !m_Client.Dropped());
-#else
+#endif
+
+#ifdef GIT
     std::string cmd = "status";
     APOpen cppipe = RunCommand(cmd);
 
     std::string line;
     while (cppipe->ReadLine(line))
     {
-        m_Connection->InfoLine(line);
+        // DEBUG: m_Connection->InfoLine(line);
         if (line == "fatal: Not a git repository (or any of the parent directories): .git")
         {
             NotifyOffline("Login failed");
