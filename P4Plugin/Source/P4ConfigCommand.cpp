@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <iterator>
 
+#define GIT
+
 using namespace std;
 
 class P4ConfigCommand : public P4Command
@@ -100,7 +102,17 @@ public:
             Conn().DataLine("enablesGetLatestOnChangeSetSubset", MAConfig);
 
             // We provide 4 configuration fields for the GUI to display
-            Conn().DataLine("5");
+            Conn().DataLine("1");
+
+#ifdef GIT
+            Conn().DataLine("vcGitServer");
+            Conn().DataLine("Git URL", MAConfig);
+            Conn().DataLine("The git server using format: git@hostname:repo. Hostname defaults to 'localhost' and port defaults to 22", MAConfig);
+            Conn().DataLine("localhost");
+            Conn().DataLine("0"); // 
+#endif
+
+#ifdef PERFORCE
             Conn().DataLine("vcPerforceUsername");               // key
             Conn().DataLine("Username", MAConfig);               // label
             Conn().DataLine("The perforce user name", MAConfig); // description
@@ -130,6 +142,7 @@ public:
             Conn().DataLine("The perforce host ie. P4HOST. It can often be left blank.", MAConfig);
             Conn().DataLine("");
             Conn().DataLine("0"); // 
+#endif
 
             // We have 11 custom overlay icons
             Conn().DataLine("overlays");
