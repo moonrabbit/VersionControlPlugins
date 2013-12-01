@@ -47,8 +47,8 @@ static void CleanupErrorMessage(string& m)
 {
     if (RemoveLineWithPrefix(m, "Submit aborted -- fix problems then use 'p4 submit -c")) ;
     else if (ReplaceLineWithPrefix(m, 
-                                   "Merges still pending -- use 'resolve' to merge files.",
-                                   "Merges still pending. Please resolve and resubmit.")) ;
+                "Merges still pending -- use 'resolve' to merge files.",
+                "Merges still pending. Please resolve and resubmit.")) ;
 }
 
 VCSStatus errorToVCSStatus(Error& e)
@@ -75,14 +75,14 @@ VCSStatus errorToVCSStatus(Error& e)
 
     if (e.CheckId(MsgClient::ClobberFile)) // TODO: Check if clobberfile is severity failed and remove if so
         sev = VCSSEV_Error;
-        
+
     StrBuf msg;
     e.Fmt(&msg);
     VCSStatus status;
     string msgStr = msg.Text();
 
     CleanupErrorMessage(msgStr);
-    
+
     if (!msgStr.empty() || sev != VCSSEV_OK)
         status.insert(VCSStatusItem(sev, msgStr));
     return status;
@@ -194,7 +194,7 @@ void P4Task::SetProjectPath(const std::string& p)
 
 const std::string& P4Task::GetProjectPath() const
 {
-  return m_ProjectPathConfig;
+    return m_ProjectPathConfig;
 }
 
 void P4Task::SetP4Info(const P4Info& info)
@@ -226,15 +226,15 @@ int P4Task::Run()
     {
         UnityCommand cmd;
         vector<string> args;
-        
+
         for ( ;; )
         {
             cmd = m_Connection->ReadCommand(args);
-            
+
             // Make it convenient to get the pipe even though the commands
             // are callback based.
             P4Command::s_Conn = m_Connection;
-            
+
             if (cmd == UCOM_Invalid)
                 return 1; // error
             else if (cmd == UCOM_Shutdown)
@@ -259,14 +259,14 @@ bool P4Task::Dispatch(UnityCommand cmd, const std::vector<string>& args)
         m_Connection->EndResponse();
         return true;
     }
-    
+
     // Dispatch
     P4Command* p4c = LookupCommand(UnityCommandToString(cmd));
     if (!p4c)
     {
         throw CommandException(cmd, string("unknown command"));
     }
-    
+
     if (!p4c->Run(*this, args))
         return false;
 
@@ -298,9 +298,9 @@ bool P4Task::Connect()
     else
         m_Client.SetPassword(m_PasswordConfig.c_str());
     m_Client.SetClient(m_ClientConfig.c_str());
-    
+
     m_Client.Init( &err );
-    
+
     VCSStatus status = errorToVCSStatus(err);
 
     // Retry in case of unicode needs to be enabled on client    
@@ -418,7 +418,7 @@ bool P4Task::Login()
     }
 
     SendToConnection(*m_Connection, p4c->GetStatus(), MAProtocol);
-    
+
     if (loggedIn)
     {
         return true; // All is fine. We're already logged in
@@ -434,7 +434,7 @@ bool P4Task::Login()
     args.clear();
     args.push_back("login");
     loggedIn = p4c->Run(*this, args); 
-    
+
     if (HasUnicodeNeededError(p4c->GetStatus()))
     {
         EnableUTF8Mode();
@@ -541,7 +541,7 @@ bool P4Task::IsConnected()
 // Run a perforce command
 bool P4Task::CommandRun(const string& command, P4Command* client)
 {
-    
+
     m_Connection->Log().Info() << command << Endl;
     m_Connection->VerboseLine(command);
 
