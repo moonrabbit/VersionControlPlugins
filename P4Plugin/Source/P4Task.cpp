@@ -48,7 +48,8 @@ static void CleanupErrorMessage(string& m)
     if (RemoveLineWithPrefix(m, "Submit aborted -- fix problems then use 'p4 submit -c")) ;
     else if (ReplaceLineWithPrefix(m, 
                 "Merges still pending -- use 'resolve' to merge files.",
-                "Merges still pending. Please resolve and resubmit.")) ;
+                "Merges still pending. Please resolve and resubmit.")) 
+        ;
 }
 
 VCSStatus errorToVCSStatus(Error& e)
@@ -106,42 +107,61 @@ P4Task::~P4Task()
 
 void P4Task::SetP4Port(const string& p)
 { 
+#ifdef PERFORCE
     m_Client.SetPort(p.c_str()); 
+#endif
     m_PortConfig = p;
     m_IsOnline = false;
 }
 
 string P4Task::GetP4Port() const
 {
+#ifdef PERFORCE
     return m_PortConfig.empty() ? string("perforce:1666") : m_PortConfig;
+#else
+    return "DEFAULT_PORT";
+#endif
 }
 
 void P4Task::SetP4User(const string& u)
 { 
+#ifdef PERFORCE
     m_Client.SetUser(u.c_str()); 
+#endif
     m_UserConfig = u;
     m_IsOnline = false;
 }
 
 string P4Task::GetP4User()
 {
+#ifdef PERFORCE
     return m_Client.GetUser().Text();
+#else
+    return "DEBUG_GIT";
+#endif
 }
 
 void P4Task::SetP4Client(const string& c)
 {
+#ifdef PERFORCE
     m_Client.SetClient(c.c_str()); 
+#endif
     m_ClientConfig = c;
     m_IsOnline = false;
 }
 
 string P4Task::GetP4Client()
 {
+#ifdef PERFORCE
     return m_Client.GetClient().Text(); 
+#else
+    return "DEFAULT_WORKSPACE";
+#endif
 }
 
 void P4Task::SetP4Password(const string& p)
 {
+#ifdef PERFORCE
     if (p.empty())
     {
         m_Client.SetIgnorePassword();
@@ -150,6 +170,7 @@ void P4Task::SetP4Password(const string& p)
     {
         m_Client.SetPassword(p.c_str());
     }
+#endif
     m_PasswordConfig = p;
     m_IsOnline = false;
 }
@@ -161,14 +182,20 @@ const string& P4Task::GetP4Password() const
 
 void P4Task::SetP4Host(const string& c)
 {
+#ifdef PERFORCE
     m_Client.SetHost(c.c_str()); 
+#endif
     m_HostConfig = c;
     m_IsOnline = false;
 }
 
 string P4Task::GetP4Host()
 {
+#ifdef PERFORCE
     return m_Client.GetHost().Text(); 
+#else
+    return "DEFAULT_HOSTNAME";
+#endif
 }
 
 const string& P4Task::GetP4Root() const
@@ -187,7 +214,9 @@ void P4Task::SetProjectPath(const std::string& p)
     {
         m_ProjectPathConfig = p;
         ChangeCWD(p);
+#ifdef PERFORCE
         m_Client.SetCwd(p.c_str());
+#endif
     }
     m_IsOnline = false;
 }
@@ -276,6 +305,7 @@ bool P4Task::Dispatch(UnityCommand cmd, const std::vector<string>& args)
 // Initialize the perforce client
 bool P4Task::Connect()
 {   
+#ifdef PERFORCE
     // If connection is still active then return success
     if ( IsConnected() )
         return Login();
@@ -340,6 +370,10 @@ bool P4Task::Connect()
     // We enforce ticket based authentication since that
     // is supported on every security level.
     return Login();
+#else
+    m_P4Connect = true;
+    return true;
+#endif
 }
 
 void P4Task::NotifyOffline(const string& reason)
@@ -507,6 +541,7 @@ void P4Task::Logout()
 // Finalise the perforce client 
 bool P4Task::Disconnect()
 {
+#ifdef PERFORCE
     Error err;
 
     m_IsOnline = false;
@@ -528,14 +563,22 @@ bool P4Task::Disconnect()
 
     if( err.Test() )
         return false;
+#else
+    m_IsOnline = false;
+    m_P4Connect = false;
 
+#endif
     return true;
 }
 
 // Return the "connected" state
 bool P4Task::IsConnected()
 {
+#ifdef PERFORCE
     return (m_P4Connect && !m_Client.Dropped());
+#else
+    return m_P4Connect;
+#endif
 }
 
 // Run a perforce command
@@ -556,13 +599,20 @@ bool P4Task::CommandRun(const string& command, P4Command* client)
         if ( argv == 0 || argc == 0 )
             return "No perforce command was passed";
 
+#ifdef PERFORCE
         if ( argc > 1 )
             m_Client.SetArgv( argc-1, &argv[1] );
 
         m_Client.Run(argv[0], client);
+#endif
+
         CommandLineFreeArgs(argv);
     }
+#ifdef PERFORCE
     return !client->HasErrors();
+#else
+    return true;
+#endif
 }
 
 bool P4Task::HasUnicodeNeededError( VCSStatus status )
@@ -573,15 +623,22 @@ bool P4Task::HasUnicodeNeededError( VCSStatus status )
 void P4Task::EnableUTF8Mode()
 {
     CharSetApi::CharSet cs = CharSetApi::UTF_8;
+
+#ifdef PERFORCE
     m_Client.SetTrans( cs, cs, cs, cs );
     m_Client.SetCharset("utf8");
+#endif
 }
 
 void P4Task::DisableUTF8Mode()
 {
+#ifdef PERFORCE
     m_Client.SetCharset("");
     CharSetApi::CharSet cs = CharSetApi::NOCONV;
     m_Client.SetTrans( cs, -2, -2, -2 );
+#else
+    CharSetApi::CharSet cs = CharSetApi::NOCONV;
+#endif
 }
 
 
