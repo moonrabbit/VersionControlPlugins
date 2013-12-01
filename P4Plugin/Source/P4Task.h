@@ -45,6 +45,8 @@ public:
     // Returns true on success
     bool CommandRun( const std::string& command, P4Command* client );
     bool Disconnect();
+
+    APOpen RunCommand(const std::string& cmd);
     
     static void NotifyOffline(const std::string& reason);
     static void NotifyOnline();
@@ -70,11 +72,14 @@ private:
 
     bool m_IsOnline;
 
+    // Git settings
+    std::string     m_GitPath;
+
     // Perforce connection
     bool            m_P4Connect;
     ClientApi       m_Client;
     StrBuf          m_Spec;
-    std::string        m_Root;
+    std::string     m_Root;
     P4Info          m_Info;
     P4Streams       m_Streams;
 

@@ -95,6 +95,7 @@ P4Task* P4Task::s_Singleton = NULL;
 // written to stdout and errors to stderr.  All text based communications used tags to make the parsing easier on both ends.
 P4Task::P4Task()
 {
+    m_GitPath = "git";
     m_P4Connect = false;
     m_IsOnline = false;
     s_Singleton = this;
@@ -290,7 +291,15 @@ bool P4Task::Dispatch(UnityCommand cmd, const std::vector<string>& args)
     }
 
     // Dispatch
-    P4Command* p4c = LookupCommand(UnityCommandToString(cmd));
+    const string& p4c_name = UnityCommandToString(cmd);
+
+    m_Connection->InfoLine("DEBUG:command: " + p4c_name);
+    for (std::vector<string>::const_iterator i = args.begin(); i != args.end(); ++i)
+    {
+        m_Connection->InfoLine("DEBUG:argument: " + *i);
+    }
+
+    P4Command* p4c = LookupCommand(p4c_name);
     if (!p4c)
     {
         throw CommandException(cmd, string("unknown command"));
@@ -577,7 +586,16 @@ bool P4Task::IsConnected()
 #ifdef PERFORCE
     return (m_P4Connect && !m_Client.Dropped());
 #else
-    return m_P4Connect;
+    std::string cmd = "status";
+    APOpen cppipe = RunCommand(cmd);
+
+    std::string line;
+    while (cppipe->ReadLine(line))
+    {
+        m_Connection->Log().Info() << line << "\n";
+    }
+
+    return false;
 #endif
 }
 
@@ -641,5 +659,21 @@ void P4Task::DisableUTF8Mode()
 #endif
 }
 
-
+APOpen P4Task::RunCommand(const std::string& cmd)
+{
+    string cmdline = "\"";
+    cmdline += m_GitPath + "\" ";
+    cmdline += cmd;
+    m_Connection->Log().Info() << cmdline << Endl;
+    try
+    {
+        return APOpen(new POpen(cmdline));
+    }
+    catch (PluginException e)
+    {
+        if (PathExists(m_GitPath))
+            throw;
+        throw PluginException(string("No git executable at path '") + m_GitPath + "'");
+    }
+}
 
