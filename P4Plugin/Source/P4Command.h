@@ -18,55 +18,55 @@ Connection& SendToConnection(Connection& p, const VCSStatus& st, MessageArea ma)
 class P4Command : public ClientUser
 {
 public:
-	virtual bool Run(P4Task& task, const CommandArgs& args) = 0;
-	
-	const VCSStatus& GetStatus() const;
-	VCSStatus& GetStatus();
+    virtual bool Run(P4Task& task, const CommandArgs& args) = 0;
+    
+    const VCSStatus& GetStatus() const;
+    VCSStatus& GetStatus();
 
-	// Error* GetError();
-	bool HasErrors() const;
-	void ClearStatus();
-	
-	std::string GetStatusMessage() const;
+    // Error* GetError();
+    bool HasErrors() const;
+    void ClearStatus();
+    
+    std::string GetStatusMessage() const;
 
-	bool ConnectAllowed(); // is this command allowed to initiate a connect
-	
-	// ClientUser overides
-	void HandleError( Error *err );
-	void OutputError( const char *errBuf );
-	void ErrorPause( char* errBuf, Error* e);
-	void OutputInfo( char level, const char *data );
-	void OutputStat( StrDict *varList );
-	void OutputText( const char *data, int length);
-	void OutputBinary( const char *data, int length);
-	void InputData( StrBuf *buf, Error *err );
-	void Prompt( const StrPtr &msg, StrBuf &buf, int noEcho ,Error *e );
-	void Finished();
+    bool ConnectAllowed(); // is this command allowed to initiate a connect
+    
+    // ClientUser overides
+    void HandleError( Error *err );
+    void OutputError( const char *errBuf );
+    void ErrorPause( char* errBuf, Error* e);
+    void OutputInfo( char level, const char *data );
+    void OutputStat( StrDict *varList );
+    void OutputText( const char *data, int length);
+    void OutputBinary( const char *data, int length);
+    void InputData( StrBuf *buf, Error *err );
+    void Prompt( const StrPtr &msg, StrBuf &buf, int noEcho ,Error *e );
+    void Finished();
 
-	static Connection& Conn() { return *s_Conn; }
-	
+    static Connection& Conn() { return *s_Conn; }
+    
 protected:
-	P4Command(const char* name);
-	static bool HandleOnlineStatusOnError(Error *err);
+    P4Command(const char* name);
+    static bool HandleOnlineStatusOnError(Error *err);
 
-	// Many of the derived classes need to send updated
-	// state of a list. This is a convenience method to do that.
-	static void RunAndSendStatus(P4Task& task, const VersionedAssetList& assetList);
-	bool m_AllowConnect;
+    // Many of the derived classes need to send updated
+    // state of a list. This is a convenience method to do that.
+    static void RunAndSendStatus(P4Task& task, const VersionedAssetList& assetList);
+    bool m_AllowConnect;
 
-	struct Mapping 
-	{
-		std::string depotPath;
-		std::string clientPath;
-	};
+    struct Mapping 
+    {
+        std::string depotPath;
+        std::string clientPath;
+    };
 
-	static const std::vector<Mapping>& GetMappings(P4Task& task, const VersionedAssetList& assetList);
-	static bool MapToLocal(P4Task& task, VersionedAssetList& assets);
+    static const std::vector<Mapping>& GetMappings(P4Task& task, const VersionedAssetList& assetList);
+    static bool MapToLocal(P4Task& task, VersionedAssetList& assets);
 
-	friend class P4Task;
-	static Connection* s_Conn;
+    friend class P4Task;
+    static Connection* s_Conn;
 private:
-	VCSStatus m_Status;
+    VCSStatus m_Status;
 };
 
 // Lookup command handler by name

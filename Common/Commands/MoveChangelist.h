@@ -6,23 +6,23 @@
 class MoveChangelistRequest : public BaseRequest
 {
 public:
-	MoveChangelistRequest(const CommandArgs& args, Connection& conn) : BaseRequest(args, conn)
-	{
-		assets.clear();
-		conn >> changelist;
-		conn >> assets;
+    MoveChangelistRequest(const CommandArgs& args, Connection& conn) : BaseRequest(args, conn)
+    {
+        assets.clear();
+        conn >> changelist;
+        conn >> assets;
 
-		if (assets.empty())
-		{
-			assets.clear();
-			conn << assets;
-			conn.EndResponse();
-			invalid = true;
-		}
-	}
+        if (assets.empty())
+        {
+            assets.clear();
+            conn << assets;
+            conn.EndResponse();
+            invalid = true;
+        }
+    }
 
-	VersionedAssetList assets;
-	ChangelistRevision changelist;
+    VersionedAssetList assets;
+    ChangelistRevision changelist;
 };
 
 
@@ -31,16 +31,16 @@ class MoveChangelistResponse : public BaseResponse
 public:
     MoveChangelistResponse(MoveChangelistRequest& req) : request(req), conn(req.conn) {}
 
-	void Write()
-	{
-		if (request.invalid)
-			return;
-		
-		conn << assets;
-		conn.EndResponse();
-	}
+    void Write()
+    {
+        if (request.invalid)
+            return;
+        
+        conn << assets;
+        conn.EndResponse();
+    }
 
-	MoveChangelistRequest& request;
-	Connection& conn;
-	VersionedAssetList assets;
+    MoveChangelistRequest& request;
+    Connection& conn;
+    VersionedAssetList assets;
 };

@@ -11,60 +11,60 @@ using namespace std;
 class P4ChangesCommand : public P4Command
 {
 public:
-	P4ChangesCommand(const char* name) : P4Command(name) {}
-	virtual bool Run(P4Task& task, const CommandArgs& args)
-	{				
-		ClearStatus();
-		Conn().Log().Info() << args[0] << "::Run()" << Endl;
-		const string cmd = string("changes -s pending -u ") + task.GetP4User() + " -c " + task.GetP4Client();
+    P4ChangesCommand(const char* name) : P4Command(name) {}
+    virtual bool Run(P4Task& task, const CommandArgs& args)
+    {                
+        ClearStatus();
+        Conn().Log().Info() << args[0] << "::Run()" << Endl;
+        const string cmd = string("changes -s pending -u ") + task.GetP4User() + " -c " + task.GetP4Client();
 
-		Conn().BeginList();
-		
-		// The default list is always there
-		Changelist defaultItem;
-		const char * kDefaultList = "default";		
-		defaultItem.SetDescription(kDefaultList);
-		defaultItem.SetRevision(kDefaultListRevision);
-		
-		Conn() << defaultItem;
-		
-		task.CommandRun(cmd, this);
-		Conn().EndList();
-		Conn() << GetStatus();
+        Conn().BeginList();
+        
+        // The default list is always there
+        Changelist defaultItem;
+        const char * kDefaultList = "default";        
+        defaultItem.SetDescription(kDefaultList);
+        defaultItem.SetRevision(kDefaultListRevision);
+        
+        Conn() << defaultItem;
+        
+        task.CommandRun(cmd, this);
+        Conn().EndList();
+        Conn() << GetStatus();
 
-		// The OutputState and other callbacks will now output to stdout.
-		// We just wrap up the communication here.
-		Conn().EndResponse();
-		
-		return true;
-	}
-	
-	// Called once per changelist 
-	void OutputInfo( char level, const char *data )
-	{
-		string d(data);
-		const size_t minLength = 8; // "Change x".length()
+        // The OutputState and other callbacks will now output to stdout.
+        // We just wrap up the communication here.
+        Conn().EndResponse();
+        
+        return true;
+    }
+    
+    // Called once per changelist 
+    void OutputInfo( char level, const char *data )
+    {
+        string d(data);
+        const size_t minLength = 8; // "Change x".length()
 
-		Conn().VerboseLine(d);
+        Conn().VerboseLine(d);
 
-		if (d.length() <= minLength)
-		{
-			Conn().WarnLine(string("p4 changelist too short: ") + d);
-			return;
-		}
-		
-		// Parse the change list
-		string::size_type i = d.find(' ', 8);
-		if (i == string::npos)
-		{
-			Conn().WarnLine(string("p4 couldn't locate revision: ") + d);
-			return;
-		}
-		
-		Changelist item;
-		item.SetDescription(d.substr(i));
-		item.SetRevision(d.substr(minLength-1, i - (minLength-1)));
-		Conn() << item;
-	}
-	
+        if (d.length() <= minLength)
+        {
+            Conn().WarnLine(string("p4 changelist too short: ") + d);
+            return;
+        }
+        
+        // Parse the change list
+        string::size_type i = d.find(' ', 8);
+        if (i == string::npos)
+        {
+            Conn().WarnLine(string("p4 couldn't locate revision: ") + d);
+            return;
+        }
+        
+        Changelist item;
+        item.SetDescription(d.substr(i));
+        item.SetRevision(d.substr(minLength-1, i - (minLength-1)));
+        Conn() << item;
+    }
+    
 } cChanges("changes");

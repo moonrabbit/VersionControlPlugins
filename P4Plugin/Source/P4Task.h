@@ -15,82 +15,82 @@ VCSStatus errorToVCSStatus(Error& e);
 class P4Task
 {
 public:
-	P4Task();
-	~P4Task();
+    P4Task();
+    ~P4Task();
 
-	// Setup
-	void SetP4Port(const std::string& p);
-	std::string GetP4Port() const;
-	void SetP4User(const std::string& u);
-	std::string GetP4User();
-	void SetP4Client(const std::string& c);
-	std::string GetP4Client();
-	void SetP4Password(const std::string& p);
-	const std::string& GetP4Password() const;
-	void SetP4Host(const std::string& c);
-	std::string GetP4Host();
-	void SetP4Root(const std::string& r);
-	const std::string& GetP4Root() const;
-	void SetProjectPath(const std::string& p);
-	const std::string& GetProjectPath() const;
-	void SetP4Info(const P4Info& info);
-	const P4Info& GetP4Info() const;
-	void SetP4Streams(const P4Streams& s);
-	const P4Streams& GetP4Streams() const;
-	
-	int Run();
-	bool IsConnected();
+    // Setup
+    void SetP4Port(const std::string& p);
+    std::string GetP4Port() const;
+    void SetP4User(const std::string& u);
+    std::string GetP4User();
+    void SetP4Client(const std::string& c);
+    std::string GetP4Client();
+    void SetP4Password(const std::string& p);
+    const std::string& GetP4Password() const;
+    void SetP4Host(const std::string& c);
+    std::string GetP4Host();
+    void SetP4Root(const std::string& r);
+    const std::string& GetP4Root() const;
+    void SetProjectPath(const std::string& p);
+    const std::string& GetProjectPath() const;
+    void SetP4Info(const P4Info& info);
+    const P4Info& GetP4Info() const;
+    void SetP4Streams(const P4Streams& s);
+    const P4Streams& GetP4Streams() const;
+    
+    int Run();
+    bool IsConnected();
 
-	// Run a single command and write response to stdout
-	// Returns true on success
-	bool CommandRun( const std::string& command, P4Command* client );
-	bool Disconnect();
-	
-	static void NotifyOffline(const std::string& reason);
-	static void NotifyOnline();
-	
-	// Set but do not notify unity about it
-	static void SetOnline(bool isOnline);
-	static bool IsOnline();
-	void Logout();
-	void DisableUTF8Mode();
+    // Run a single command and write response to stdout
+    // Returns true on success
+    bool CommandRun( const std::string& command, P4Command* client );
+    bool Disconnect();
+    
+    static void NotifyOffline(const std::string& reason);
+    static void NotifyOnline();
+    
+    // Set but do not notify unity about it
+    static void SetOnline(bool isOnline);
+    static bool IsOnline();
+    void Logout();
+    void DisableUTF8Mode();
 
 private:
 
-	bool Dispatch(UnityCommand c, const std::vector<std::string>& args);
+    bool Dispatch(UnityCommand c, const std::vector<std::string>& args);
 
-	// Connection
-	bool Connect();
+    // Connection
+    bool Connect();
 
-	void EnableUTF8Mode();
+    void EnableUTF8Mode();
 
-	bool Login();
-	bool HasUnicodeNeededError(VCSStatus status);
-	
+    bool Login();
+    bool HasUnicodeNeededError(VCSStatus status);
+    
 
-	bool m_IsOnline;
+    bool m_IsOnline;
 
-	// Perforce connection
-	bool            m_P4Connect;
-	ClientApi       m_Client;
-	StrBuf          m_Spec;
-	std::string		m_Root;
-	P4Info          m_Info;
-	P4Streams       m_Streams;
+    // Perforce connection
+    bool            m_P4Connect;
+    ClientApi       m_Client;
+    StrBuf          m_Spec;
+    std::string        m_Root;
+    P4Info          m_Info;
+    P4Streams       m_Streams;
 
-	std::string m_PortConfig;
-	std::string m_UserConfig;
-	std::string m_ClientConfig;
-	std::string m_HostConfig;
-	std::string m_PasswordConfig;
-	std::string m_ProjectPathConfig;
-	
-	// Command execution
-	std::string m_CommandOutput;
+    std::string m_PortConfig;
+    std::string m_UserConfig;
+    std::string m_ClientConfig;
+    std::string m_HostConfig;
+    std::string m_PasswordConfig;
+    std::string m_ProjectPathConfig;
+    
+    // Command execution
+    std::string m_CommandOutput;
 
-	Connection* m_Connection;
+    Connection* m_Connection;
 
-	friend class P4Command;
-	static P4Task* s_Singleton;
+    friend class P4Command;
+    static P4Task* s_Singleton;
 };
 

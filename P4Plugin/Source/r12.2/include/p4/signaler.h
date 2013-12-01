@@ -11,12 +11,12 @@
  *
  * Public methods:
  *
- *	Signaler::Block() -- don't catch the signal until Catch()
- *	Signaler::Catch() -- catch and handle SIGINT
- *	Signaler::OnIntr() -- call a designated function on SIGINT
- *	Signaler::DeleteOnIntr() -- undo OnIntr() call
+ *    Signaler::Block() -- don't catch the signal until Catch()
+ *    Signaler::Catch() -- catch and handle SIGINT
+ *    Signaler::OnIntr() -- call a designated function on SIGINT
+ *    Signaler::DeleteOnIntr() -- undo OnIntr() call
  *
- *	Signaler::Intr() -- call functions registered by OnIntr()
+ *    Signaler::Intr() -- call functions registered by OnIntr()
  *
  * Requires cooperation from the TempFile objects to delete files.
  */
@@ -32,24 +32,24 @@ typedef void (*SignalFunc)( void *ptr );
 class Signaler {
 
     public:
-			Signaler();
+            Signaler();
 
-	void		Block();
-	void		Catch();
-	void		Disable();
+    void        Block();
+    void        Catch();
+    void        Disable();
 
-	void		OnIntr( SignalFunc callback, void *ptr );
-	void		DeleteOnIntr( void *ptr );
+    void        OnIntr( SignalFunc callback, void *ptr );
+    void        DeleteOnIntr( void *ptr );
 
-	void		Intr();
+    void        Intr();
 
     private:
 
-	SignalMan	*list;
-	int		disable;
+    SignalMan    *list;
+    int        disable;
 
 # ifdef OS_NT
-	HANDLE		hmutex;
+    HANDLE        hmutex;
 # endif // OS_NT
 
 } ;

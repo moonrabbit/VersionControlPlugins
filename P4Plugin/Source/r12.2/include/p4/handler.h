@@ -20,54 +20,54 @@
  *
  * Public classes:
  *
- *	Handlers - a list of LastChance objects
- *	LastChance - a virtual base class that gets deleted with the
- *			handlers.
+ *    Handlers - a list of LastChance objects
+ *    LastChance - a virtual base class that gets deleted with the
+ *            handlers.
  */
 
 class LastChance;
 
 struct Handler {
-	    StrBuf	name;
-	    int		anyErrors;
-	    LastChance	*lastChance;
+        StrBuf    name;
+        int        anyErrors;
+        LastChance    *lastChance;
 } ;
 
 class LastChance {
 
     public:
-			LastChance()
-			{
-			    handler = 0;
-			    isError = 0;
-			}
+            LastChance()
+            {
+                handler = 0;
+                isError = 0;
+            }
 
-	virtual		~LastChance();
+    virtual        ~LastChance();
 
-	void		Install( Handler *h )
-			{
-			    handler = h; 
-			    handler->lastChance = this;
-			}
+    void        Install( Handler *h )
+            {
+                handler = h; 
+                handler->lastChance = this;
+            }
 
-	void		SetError()
-			{
-			    isError = 1;
-			}
+    void        SetError()
+            {
+                isError = 1;
+            }
 
-	void		SetError( Error *e )
-			{
-			    if( e->Test() ) isError = 1;
-			}
+    void        SetError( Error *e )
+            {
+                if( e->Test() ) isError = 1;
+            }
 
-	int		IsError()
-			{
-			    return isError;
-			}
+    int        IsError()
+            {
+                return isError;
+            }
 
     private:
-	Handler		*handler;
-	int		isError;
+    Handler        *handler;
+    int        isError;
 
 } ;
 
@@ -76,23 +76,23 @@ const int maxHandlers = 10;
 class Handlers {
 
     public:
-			Handlers();
-			~Handlers();
+            Handlers();
+            ~Handlers();
 
-	void		Install( const StrPtr *name, 
-				LastChance *lastChance,
-				Error *e );
+    void        Install( const StrPtr *name, 
+                LastChance *lastChance,
+                Error *e );
 
-	LastChance *	Get( const StrPtr *name, Error *e = 0 );
+    LastChance *    Get( const StrPtr *name, Error *e = 0 );
 
-	int		AnyErrors( const StrPtr *nane );
+    int        AnyErrors( const StrPtr *nane );
 
-	void		SetError( const StrPtr *name, Error *e );
+    void        SetError( const StrPtr *name, Error *e );
 
     private:
 
-	int		numHandlers;
-	Handler 	table[maxHandlers];
-	Handler		*Find( const StrPtr *handle, Error *e = 0 );
+    int        numHandlers;
+    Handler     table[maxHandlers];
+    Handler        *Find( const StrPtr *handle, Error *e = 0 );
 } ;
 

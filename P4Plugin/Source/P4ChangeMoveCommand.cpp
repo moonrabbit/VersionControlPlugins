@@ -8,13 +8,13 @@ using namespace std;
 class P4ChangeMoveCommand : public P4FileSetBaseCommand
 {
 public:
-	P4ChangeMoveCommand() : P4FileSetBaseCommand("changeMove") {}
-	
-	virtual string SetupCommand(const CommandArgs& args)
-	{
-		ChangelistRevision cr;
-		Conn() >> cr;
-		string cmd("reopen -c ");
-		return cmd += (cr == kDefaultListRevision ? string("default") : cr);
-	}
+    P4ChangeMoveCommand() : P4FileSetBaseCommand("changeMove") {}
+    
+    virtual string SetupCommand(const CommandArgs& args)
+    {
+        ChangelistRevision cr;
+        Conn() >> cr;
+        string cmd("reopen -c ");
+        return cmd += (cr == kDefaultListRevision ? string("default") : cr);
+    }
 } cChangeMove;

@@ -3,13 +3,13 @@
 class BaseRequest
 {
 public:
-	BaseRequest(const CommandArgs& args, Connection& conn) : args(args), conn(conn), invalid(false)
-	{
-	}  
+    BaseRequest(const CommandArgs& args, Connection& conn) : args(args), conn(conn), invalid(false)
+    {
+    }  
 
-	const CommandArgs& args;
-	Connection& conn;
-	bool invalid;
+    const CommandArgs& args;
+    Connection& conn;
+    bool invalid;
 };
 
 class BaseResponse

@@ -24,7 +24,7 @@
 
 # ifdef OS_VMS
 # define _POSIX_EXIT  // to get exit status right from stdlib.h
-# endif	
+# endif    
 
 # include <stdio.h>
 # include <string.h>
@@ -71,17 +71,17 @@
  */
 
 # if defined( NEED_ACCESS ) || \
-	defined( NEED_CHDIR ) || \
-	defined( NEED_EBCDIC ) || \
-	defined( NEED_FILE ) || \
-	defined( NEED_FSYNC ) || \
-	defined( NEED_FORK ) || \
-	defined( NEED_GETCWD ) || \
-	defined( NEED_GETPID ) || \
-	defined( NEED_GETPWUID ) || \
-	defined( NEED_GETUID ) || \
-	defined( NEED_BRK ) || \
-	defined( NEED_SLEEP )
+    defined( NEED_CHDIR ) || \
+    defined( NEED_EBCDIC ) || \
+    defined( NEED_FILE ) || \
+    defined( NEED_FSYNC ) || \
+    defined( NEED_FORK ) || \
+    defined( NEED_GETCWD ) || \
+    defined( NEED_GETPID ) || \
+    defined( NEED_GETPWUID ) || \
+    defined( NEED_GETUID ) || \
+    defined( NEED_BRK ) || \
+    defined( NEED_SLEEP )
 
 # ifndef OS_NT
 # include <unistd.h>
@@ -230,10 +230,10 @@ extern "C" char *getcwd( char *buf, size_t size );
 # endif
 
 # if defined(OS_PTX) || \
-	defined(OS_QNX) || \
-	defined(OS_AIX32) || \
-	defined(OS_NCR) || \
-	defined(OS_UNIXWARE2)
+    defined(OS_QNX) || \
+    defined(OS_AIX32) || \
+    defined(OS_NCR) || \
+    defined(OS_UNIXWARE2)
 
 extern "C" int gethostname( char * name, int namelen );
 
@@ -255,11 +255,11 @@ extern "C" int __stdcall gethostname( char * name, int namelen );
 # if defined(OS_OS2)
 # include <process.h>
 # endif /* OS2 */
-# endif	/* NT */
-# endif	/* GETPID */
+# endif    /* NT */
+# endif    /* GETPID */
 
 # if !defined( OS_VMS ) && !defined( OS_NT ) && !defined( OS_BEOS ) && \
-	!defined( MAC_MWPEF ) && !defined( OS_OS2 )
+    !defined( MAC_MWPEF ) && !defined( OS_OS2 )
 # define HAVE_GETPWUID
 # ifdef NEED_GETPWUID
 # include <pwd.h>
@@ -310,7 +310,7 @@ extern "C" int __stdcall gethostname( char * name, int namelen );
 # define S_IRUSR S_IREAD
 # define S_IWUSR S_IWRITE
 # define S_IXUSR S_IEXEC
-# endif	/* S_IRUSR */
+# endif    /* S_IRUSR */
 # endif
 
 # ifndef PERM_0222
@@ -359,14 +359,14 @@ extern "C" int __stdcall gethostname( char * name, int namelen );
 /* added AIX 5.3 - mmap region getting corrupted */
 
 # if !defined( OS_AS400 ) && !defined( OS_BEOS ) && \
-	!defined( OS_HPUX68K ) && \
-	!defined( OS_MACHTEN ) && !defined( OS_MVS ) && \
-	!defined( OS_VMS62 ) && !defined( OS_OS2 ) && \
-	!defined( OS_NEXT ) && !defined( OS_NT ) && \
-	!defined( OS_QNX ) && !defined( OS_UNICOS ) && \
-	!defined( OS_MPEIX ) && !defined( OS_QNXNTO ) && \
-	!defined( OS_MACOSX ) && !defined( OS_ZETA ) && \
-	!defined( OS_AIX53 ) && !defined( OS_LINUXIA64 )
+    !defined( OS_HPUX68K ) && \
+    !defined( OS_MACHTEN ) && !defined( OS_MVS ) && \
+    !defined( OS_VMS62 ) && !defined( OS_OS2 ) && \
+    !defined( OS_NEXT ) && !defined( OS_NT ) && \
+    !defined( OS_QNX ) && !defined( OS_UNICOS ) && \
+    !defined( OS_MPEIX ) && !defined( OS_QNXNTO ) && \
+    !defined( OS_MACOSX ) && !defined( OS_ZETA ) && \
+    !defined( OS_AIX53 ) && !defined( OS_LINUXIA64 )
 
 # define HAVE_MMAP
 # ifdef NEED_MMAP
@@ -515,33 +515,33 @@ typedef unsigned long useconds_t;
 
 # define HAVE_SYMLINKS
 # if defined( OS_OS2 ) || \
-	defined ( MAC_MWPEF ) || \
-	defined( OS_VMS ) || \
-	defined( OS_INTERIX )
+    defined ( MAC_MWPEF ) || \
+    defined( OS_VMS ) || \
+    defined( OS_INTERIX )
 # undef HAVE_SYMLINKS
 # endif
 
 # define HAVE_TRUNCATE
 # if defined( OS_OS2 ) || \
-	defined( OS_NT ) || \
-	defined( MAC_MWPEF ) || \
-	defined( OS_BEOS ) || \
-	defined( OS_QNX ) || \
-	defined( OS_SCO ) || \
-	defined( OS_VMS ) || \
-	defined( OS_INTERIX ) || \
-	defined( OS_MVS ) || \
-	defined( OS_MPEIX ) || \
-	defined( OS_AS400 )
+    defined( OS_NT ) || \
+    defined( MAC_MWPEF ) || \
+    defined( OS_BEOS ) || \
+    defined( OS_QNX ) || \
+    defined( OS_SCO ) || \
+    defined( OS_VMS ) || \
+    defined( OS_INTERIX ) || \
+    defined( OS_MVS ) || \
+    defined( OS_MPEIX ) || \
+    defined( OS_AS400 )
 # undef HAVE_TRUNCATE
 # endif
 
 /* These systems have no memccpy() or a broken one */
 
 # if defined( OS_AS400 ) || defined( OS_BEOS ) || defined( OS_FREEBSD ) || \
-	defined( OS_MACHTEN ) || defined( OS_MVS ) || \
-	defined( OS_VMS62 ) || defined( OS_RHAPSODY ) || defined( OS_ZETA )
-	
+    defined( OS_MACHTEN ) || defined( OS_MVS ) || \
+    defined( OS_VMS62 ) || defined( OS_RHAPSODY ) || defined( OS_ZETA )
+    
 # define BAD_MEMCCPY
 extern "C" void *memccpy(void *, const void *, int, size_t);
 # endif

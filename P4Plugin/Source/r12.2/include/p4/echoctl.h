@@ -16,10 +16,10 @@ struct EchoContext;
 class NoEcho {
 
     public:
-	NoEcho();
-	~NoEcho();
+    NoEcho();
+    ~NoEcho();
 
     private:
-	EchoContext *context;
+    EchoContext *context;
 
 } ;

@@ -11,11 +11,11 @@
  *
  * Public methods:
  *
- *	HostEnv::GetCwd() - return the processes current working directory
- *	HostEnv::GetHost() - return the host name
- *	HostEnv::GetUser() - return the invoking user name
- *	HostEnv::GetTicketFile() - return the user ticket file location
- *	HostEnv::GetUid() - return the user id #, platform specific
+ *    HostEnv::GetCwd() - return the processes current working directory
+ *    HostEnv::GetHost() - return the host name
+ *    HostEnv::GetUser() - return the invoking user name
+ *    HostEnv::GetTicketFile() - return the user ticket file location
+ *    HostEnv::GetUid() - return the user id #, platform specific
  */
 
 class Enviro;
@@ -23,14 +23,14 @@ class Enviro;
 class HostEnv {
 
     public:
-	int		GetCwd( StrBuf &result, Enviro * = 0 );
-	int		GetHost( StrBuf &result );
-	int		GetUser( StrBuf &result, Enviro * = 0 );
-	int		GetTicketFile( StrBuf &result, Enviro * = 0 );
-	int		GetTrustFile( StrBuf &result, Enviro * = 0 );
-	int		GetUid( int &result );
+    int        GetCwd( StrBuf &result, Enviro * = 0 );
+    int        GetHost( StrBuf &result );
+    int        GetUser( StrBuf &result, Enviro * = 0 );
+    int        GetTicketFile( StrBuf &result, Enviro * = 0 );
+    int        GetTrustFile( StrBuf &result, Enviro * = 0 );
+    int        GetUid( int &result );
 
     private:
-	int		GetHomeName( const StrRef &, StrBuf &, 
-			             Enviro *, const char *varName );
+    int        GetHomeName( const StrRef &, StrBuf &, 
+                         Enviro *, const char *varName );
 } ;

@@ -5,32 +5,32 @@
 class IncomingRequest : public BaseRequest
 {
 public:
-	IncomingRequest(const CommandArgs& args, Connection& conn) : BaseRequest(args, conn) 
-	{
-	}	
+    IncomingRequest(const CommandArgs& args, Connection& conn) : BaseRequest(args, conn) 
+    {
+    }    
 };
 
 class IncomingResponse : public BaseResponse
 {
 public:
-	IncomingResponse(IncomingRequest& req) : request(req), conn(req.conn) {}
+    IncomingResponse(IncomingRequest& req) : request(req), conn(req.conn) {}
 
-	void AddChangeSet(const Changelist& cl)
-	{
-		changeSets.push_back(cl);
-	}
-	
-	void Write()
-	{
-		if (request.invalid)
-			return;
-		
-		conn << changeSets;
-		conn.EndResponse();
-	}
+    void AddChangeSet(const Changelist& cl)
+    {
+        changeSets.push_back(cl);
+    }
+    
+    void Write()
+    {
+        if (request.invalid)
+            return;
+        
+        conn << changeSets;
+        conn.EndResponse();
+    }
 
-	IncomingRequest& request;
-	Connection& conn;
-	Changes changeSets;
+    IncomingRequest& request;
+    Connection& conn;
+    Changes changeSets;
 };
 

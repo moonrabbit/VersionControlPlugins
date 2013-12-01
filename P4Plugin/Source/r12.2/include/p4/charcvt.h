@@ -16,7 +16,7 @@ class StrBuf;
 class CharSetCvt : public CharSetApi {
 public:
     enum Errors {
-	NONE = 0, NOMAPPING, PARTIALCHAR
+    NONE = 0, NOMAPPING, PARTIALCHAR
     };
 
     static CharSetCvt *FindCvt(CharSet from, CharSet to);
@@ -28,7 +28,7 @@ public:
     virtual CharSetCvt *ReverseCvt();
 
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 
     virtual int LastErr();
 
@@ -54,7 +54,7 @@ public:
     static int Utf8Fold( const StrPtr *, StrBuf * );
 
     struct MapEnt {
-	unsigned short cfrom, cto;
+    unsigned short cfrom, cto;
     };
 
     static char bytesFromUTF8[];
@@ -63,7 +63,7 @@ public:
 
 protected:
     CharSetCvt() : lasterr(0), linecnt(1), charcnt(0), fastbuf(0), fastsize(0)
-	    {}
+        {}
 
     int lasterr;
     int linecnt;
@@ -76,13 +76,13 @@ protected:
     virtual CharStep *FromCharStep(char *);
 
     static unsigned short MapThru( unsigned short, const MapEnt *,
-		int, unsigned short );
+        int, unsigned short );
 private:
     char *fastbuf;
     int fastsize;
 
-    CharSetCvt(const CharSetCvt &);	// to prevent copys
-    void operator =(const CharSetCvt &);	// to prevent assignment
+    CharSetCvt(const CharSetCvt &);    // to prevent copys
+    void operator =(const CharSetCvt &);    // to prevent assignment
 };
 
 class CharSetCvtFromUTF8 : public CharSetCvt {
@@ -98,24 +98,24 @@ class CharSetCvtFromUTF8 : public CharSetCvt {
 
 class CharSetCvtUTF8UTF8 : public CharSetCvtFromUTF8 {
     public:
-	CharSetCvtUTF8UTF8(int dir, int f);
-	~CharSetCvtUTF8UTF8();
+    CharSetCvtUTF8UTF8(int dir, int f);
+    ~CharSetCvtUTF8UTF8();
 
 // Direction 1 to client, -1 to server
 // flags are...
-#define UTF8_WRITE_BOM		1
-#define UTF8_VALID_CHECK	2
+#define UTF8_WRITE_BOM        1
+#define UTF8_VALID_CHECK    2
 
-	virtual CharSetCvt *Clone();
+    virtual CharSetCvt *Clone();
 
-	virtual CharSetCvt *ReverseCvt();
+    virtual CharSetCvt *ReverseCvt();
 
-	virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+    virtual int Cvt(const char **sourcestart, const char *sourceend,
+            char **targetstart, char *targetend);
     private:
-	int direction;
-	int flags;
-	CharSetUTF8Valid *validator;
+    int direction;
+    int flags;
+    CharSetUTF8Valid *validator;
 };
 
 class CharSetCvtUTF16 : public CharSetCvtFromUTF8 {
@@ -138,7 +138,7 @@ class CharSetCvtUTF816 : public CharSetCvtUTF16 {
     virtual CharSetCvt *ReverseCvt();
 
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 };
 
 class CharSetCvtUTF168 : public CharSetCvtUTF16 {
@@ -151,7 +151,7 @@ class CharSetCvtUTF168 : public CharSetCvtUTF16 {
     virtual CharSetCvt *ReverseCvt();
 
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 };
 
 class CharSetCvtUTF832 : public CharSetCvtUTF16 {
@@ -164,7 +164,7 @@ class CharSetCvtUTF832 : public CharSetCvtUTF16 {
     virtual CharSetCvt *ReverseCvt();
 
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 };
 
 class CharSetCvtUTF328 : public CharSetCvtUTF16 {
@@ -177,7 +177,7 @@ class CharSetCvtUTF328 : public CharSetCvtUTF16 {
     virtual CharSetCvt *ReverseCvt();
 
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 };
 
 class CharSetCvtUTF8to8859_1 : public CharSetCvtFromUTF8 {
@@ -187,7 +187,7 @@ class CharSetCvtUTF8to8859_1 : public CharSetCvtFromUTF8 {
     virtual CharSetCvt *ReverseCvt();
 
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 };
 
 class CharSetCvt8859_1toUTF8 : public CharSetCvt {
@@ -197,7 +197,7 @@ class CharSetCvt8859_1toUTF8 : public CharSetCvt {
     virtual CharSetCvt *ReverseCvt();
 
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 };
 
 class CharSetCvtUTF8toShiftJis : public CharSetCvtFromUTF8 {
@@ -207,7 +207,7 @@ class CharSetCvtUTF8toShiftJis : public CharSetCvtFromUTF8 {
     virtual CharSetCvt *ReverseCvt();
 
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 
 private:
     static MapEnt UCS2toShiftJis[];
@@ -228,7 +228,7 @@ class CharSetCvtShiftJistoUTF8 : public CharSetCvt {
     virtual CharSetCvt *ReverseCvt();
 
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 
     virtual CharStep *FromCharStep( char * );
 
@@ -251,7 +251,7 @@ class CharSetCvtUTF8toEUCJP : public CharSetCvtFromUTF8 {
     virtual CharSetCvt *ReverseCvt();
 
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 
 private:
     static MapEnt UCS2toEUCJP[];
@@ -272,7 +272,7 @@ class CharSetCvtEUCJPtoUTF8 : public CharSetCvt {
     virtual CharSetCvt *ReverseCvt();
 
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 
     virtual CharStep *FromCharStep( char * );
 
@@ -289,10 +289,10 @@ private:
 };
 
 struct SimpleCharSet {
-    const CharSetCvt::MapEnt	*toMap;
-    int		toMapSize;
+    const CharSetCvt::MapEnt    *toMap;
+    int        toMapSize;
     const unsigned short *fromMap;
-    int		fromOffset;
+    int        fromOffset;
 };
 
 class CharSetCvtUTF8toSimple : public CharSetCvtFromUTF8 {
@@ -305,7 +305,7 @@ public:
     virtual CharSetCvt *ReverseCvt();
 
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 private:
     const SimpleCharSet *charinfo;
 };
@@ -320,7 +320,7 @@ public:
     virtual CharSetCvt *ReverseCvt();
 
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 private:
     const SimpleCharSet *charinfo;
 };
@@ -328,11 +328,11 @@ private:
 class CharSetCvtUTF8toCp : public CharSetCvtFromUTF8 {
  protected:
     CharSetCvtUTF8toCp( const MapEnt *tMap, int toSz )
-	: toMap(tMap), toMapSize(toSz) {}
+    : toMap(tMap), toMapSize(toSz) {}
 
  public:
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 
 private:
     const MapEnt *toMap;
@@ -344,16 +344,16 @@ private:
 class CharSetCvtUTF8toCp949 : public CharSetCvtUTF8toCp
 {
     public:
-	CharSetCvtUTF8toCp949() : CharSetCvtUTF8toCp( UCS2toCp949, MapCount() ) {}
+    CharSetCvtUTF8toCp949() : CharSetCvtUTF8toCp( UCS2toCp949, MapCount() ) {}
 
-	virtual CharSetCvt *Clone();
+    virtual CharSetCvt *Clone();
 
-	virtual CharSetCvt *ReverseCvt();
+    virtual CharSetCvt *ReverseCvt();
 
-	static int MapCount();
+    static int MapCount();
 
     private:
-	static MapEnt UCS2toCp949[];
+    static MapEnt UCS2toCp949[];
 
     friend void verifymaps();
     friend void dumpmaps();
@@ -364,16 +364,16 @@ class CharSetCvtUTF8toCp949 : public CharSetCvtUTF8toCp
 class CharSetCvtUTF8toCp936 : public CharSetCvtUTF8toCp
 {
     public:
-	CharSetCvtUTF8toCp936() : CharSetCvtUTF8toCp( UCS2toCp936, MapCount() ) {}
+    CharSetCvtUTF8toCp936() : CharSetCvtUTF8toCp( UCS2toCp936, MapCount() ) {}
 
-	virtual CharSetCvt *Clone();
+    virtual CharSetCvt *Clone();
 
-	virtual CharSetCvt *ReverseCvt();
+    virtual CharSetCvt *ReverseCvt();
 
-	static int MapCount();
+    static int MapCount();
 
     private:
-	static MapEnt UCS2toCp936[];
+    static MapEnt UCS2toCp936[];
 
     friend void verifymaps();
     friend void dumpmaps();
@@ -384,16 +384,16 @@ class CharSetCvtUTF8toCp936 : public CharSetCvtUTF8toCp
 class CharSetCvtUTF8toCp950 : public CharSetCvtUTF8toCp
 {
     public:
-	CharSetCvtUTF8toCp950() : CharSetCvtUTF8toCp( UCS2toCp950, MapCount() ) {}
+    CharSetCvtUTF8toCp950() : CharSetCvtUTF8toCp( UCS2toCp950, MapCount() ) {}
 
-	virtual CharSetCvt *Clone();
+    virtual CharSetCvt *Clone();
 
-	virtual CharSetCvt *ReverseCvt();
+    virtual CharSetCvt *ReverseCvt();
 
-	static int MapCount();
+    static int MapCount();
 
     private:
-	static MapEnt UCS2toCp950[];
+    static MapEnt UCS2toCp950[];
 
     friend void verifymaps();
     friend void dumpmaps();
@@ -404,11 +404,11 @@ class CharSetCvtUTF8toCp950 : public CharSetCvtUTF8toCp
 class CharSetCvtCptoUTF8 : public CharSetCvt {
  protected:
     CharSetCvtCptoUTF8( const MapEnt *tMap, int toSz )
-	: toMap(tMap), toMapSize(toSz) {}
+    : toMap(tMap), toMapSize(toSz) {}
 
  public:
     virtual int Cvt(const char **sourcestart, const char *sourceend,
-		    char **targetstart, char *targetend);
+            char **targetstart, char *targetend);
 
  private:
     const MapEnt *toMap;
@@ -421,18 +421,18 @@ class CharSetCvtCptoUTF8 : public CharSetCvt {
 class CharSetCvtCp949toUTF8 : public CharSetCvtCptoUTF8
 {
     public:
-	CharSetCvtCp949toUTF8() : CharSetCvtCptoUTF8( Cp949toUCS2, MapCount() ) {}
+    CharSetCvtCp949toUTF8() : CharSetCvtCptoUTF8( Cp949toUCS2, MapCount() ) {}
 
-	virtual CharSetCvt *Clone();
+    virtual CharSetCvt *Clone();
 
-	virtual CharSetCvt *ReverseCvt();
+    virtual CharSetCvt *ReverseCvt();
 
-	static int MapCount();
+    static int MapCount();
 
-	CharStep *FromCharStep( char * );
+    CharStep *FromCharStep( char * );
 
     private:
-	static MapEnt Cp949toUCS2[];
+    static MapEnt Cp949toUCS2[];
 
     friend void verifymaps();
     friend void dumpmaps();
@@ -444,18 +444,18 @@ class CharSetCvtCp949toUTF8 : public CharSetCvtCptoUTF8
 class CharSetCvtCp936toUTF8 : public CharSetCvtCptoUTF8
 {
     public:
-	CharSetCvtCp936toUTF8() : CharSetCvtCptoUTF8( Cp936toUCS2, MapCount() ) {}
+    CharSetCvtCp936toUTF8() : CharSetCvtCptoUTF8( Cp936toUCS2, MapCount() ) {}
 
-	virtual CharSetCvt *Clone();
+    virtual CharSetCvt *Clone();
 
-	virtual CharSetCvt *ReverseCvt();
+    virtual CharSetCvt *ReverseCvt();
 
-	static int MapCount();
+    static int MapCount();
 
-	CharStep *FromCharStep( char * );
+    CharStep *FromCharStep( char * );
 
     private:
-	static MapEnt Cp936toUCS2[];
+    static MapEnt Cp936toUCS2[];
 
     friend void verifymaps();
     friend void dumpmaps();
@@ -467,18 +467,18 @@ class CharSetCvtCp936toUTF8 : public CharSetCvtCptoUTF8
 class CharSetCvtCp950toUTF8 : public CharSetCvtCptoUTF8
 {
     public:
-	CharSetCvtCp950toUTF8() : CharSetCvtCptoUTF8( Cp950toUCS2, MapCount() ) {}
+    CharSetCvtCp950toUTF8() : CharSetCvtCptoUTF8( Cp950toUCS2, MapCount() ) {}
 
-	virtual CharSetCvt *Clone();
+    virtual CharSetCvt *Clone();
 
-	virtual CharSetCvt *ReverseCvt();
+    virtual CharSetCvt *ReverseCvt();
 
-	static int MapCount();
+    static int MapCount();
 
-	CharStep *FromCharStep( char * );
+    CharStep *FromCharStep( char * );
 
     private:
-	static MapEnt Cp950toUCS2[];
+    static MapEnt Cp950toUCS2[];
 
     friend void verifymaps();
     friend void dumpmaps();

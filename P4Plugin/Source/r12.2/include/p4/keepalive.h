@@ -24,8 +24,8 @@
 class KeepAlive {
 
     public:
-	virtual ~KeepAlive() {};
+    virtual ~KeepAlive() {};
 
-	virtual int	IsAlive() = 0;
+    virtual int    IsAlive() = 0;
 
 };

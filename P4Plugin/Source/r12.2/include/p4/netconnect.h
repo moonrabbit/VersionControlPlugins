@@ -9,37 +9,37 @@
  *
  * Classes Defined:
  *
- *	NetIoPtrs - input/output parameters for SendOrReceive()
- *	NetEndPoint - an endpoint for making connections 
- *	NetTransport - an RPC connection to/from a remote host 
+ *    NetIoPtrs - input/output parameters for SendOrReceive()
+ *    NetEndPoint - an endpoint for making connections 
+ *    NetTransport - an RPC connection to/from a remote host 
  *
  * Description:
  *
- *	These classes provide abstract base classes for an endpoint for
- *	a connection, and a connection itself.
+ *    These classes provide abstract base classes for an endpoint for
+ *    a connection, and a connection itself.
  *
- *	It should go without saying, but destructing a NetTransport must 
- *	imply a Close().
+ *    It should go without saying, but destructing a NetTransport must 
+ *    imply a Close().
  *
  * Public Methods:
  *
- *	NetEndPoint::Listen() - set up for subsequent Accept()
- *	NetEndPoint::ListenCheck() - see if we can listen on the given address
- *	NetEndPoint::CheaterCheck() - check if supplied port is the licensed one
- *	NetEndPoint::Unlisten() - cancel Listen()
- *	NetEndPoint::Transport() - return an appropriate NetTransport
- *	NetEndPoint::GetListenAddress() - return address suitable for Listen()
+ *    NetEndPoint::Listen() - set up for subsequent Accept()
+ *    NetEndPoint::ListenCheck() - see if we can listen on the given address
+ *    NetEndPoint::CheaterCheck() - check if supplied port is the licensed one
+ *    NetEndPoint::Unlisten() - cancel Listen()
+ *    NetEndPoint::Transport() - return an appropriate NetTransport
+ *    NetEndPoint::GetListenAddress() - return address suitable for Listen()
  *
- *	NetTransport::Accept() - accept a single incoming connection
- *	NetTransport::Connect() - make a single outgoing connection
- *	NetTransport::Send() - send stream data
- *	NetTransport::Receive() - receive stream data
- *	NetTransport::SendOrReceive() - send or receive what's available
- *	NetTransport::Close() - close connection
+ *    NetTransport::Accept() - accept a single incoming connection
+ *    NetTransport::Connect() - make a single outgoing connection
+ *    NetTransport::Send() - send stream data
+ *    NetTransport::Receive() - receive stream data
+ *    NetTransport::SendOrReceive() - send or receive what's available
+ *    NetTransport::Close() - close connection
  *
- *	NetTransport::GetAddress() - return connection's local address
- *	NetTransport::GetPeerAddress() - return address of the peer
- *	NetTransport::GetBuffering() - return transport level send buffering
+ *    NetTransport::GetAddress() - return connection's local address
+ *    NetTransport::GetPeerAddress() - return address of the peer
+ *    NetTransport::GetBuffering() - return transport level send buffering
  */
 
 # ifndef __NETCONNECT_H__
@@ -59,83 +59,83 @@ enum PeekResults
 
 struct NetIoPtrs {
 
-	char		*sendPtr;
-	char		*sendEnd;
+    char        *sendPtr;
+    char        *sendEnd;
 
-	char		*recvPtr;
-	char		*recvEnd;
+    char        *recvPtr;
+    char        *recvEnd;
 
 } ;
 
 class NetEndPoint {
 
     public:
-	static NetEndPoint *	Create( const char *addr, Error *e );
-	StrPtr 			GetAddress() { return ppaddr.HostPort(); }
-	virtual void            GetExpiration( StrBuf &buf );
+    static NetEndPoint *    Create( const char *addr, Error *e );
+    StrPtr             GetAddress() { return ppaddr.HostPort(); }
+    virtual void            GetExpiration( StrBuf &buf );
 
-	virtual			~NetEndPoint();
+    virtual            ~NetEndPoint();
 
-	virtual StrPtr		*GetListenAddress( int raf_flags ) = 0;
-	virtual StrPtr		*GetHost() = 0;
-	virtual void             GetMyFingerprint(StrBuf &value)
-	                {
-			    value.Clear();
-			}
+    virtual StrPtr        *GetListenAddress( int raf_flags ) = 0;
+    virtual StrPtr        *GetHost() = 0;
+    virtual void             GetMyFingerprint(StrBuf &value)
+                    {
+                value.Clear();
+            }
 
 
-	virtual void		Listen( Error *e ) = 0;
-	virtual void		ListenCheck( Error *e ) = 0;
-	virtual int		CheaterCheck( const char *port ) = 0;
-	virtual void		Unlisten() = 0;
+    virtual void        Listen( Error *e ) = 0;
+    virtual void        ListenCheck( Error *e ) = 0;
+    virtual int        CheaterCheck( const char *port ) = 0;
+    virtual void        Unlisten() = 0;
 
-	virtual NetTransport *	Connect( Error *e ) = 0;
-	virtual NetTransport *	Accept( Error *e ) = 0;
+    virtual NetTransport *    Connect( Error *e ) = 0;
+    virtual NetTransport *    Accept( Error *e ) = 0;
 
-	virtual int 		IsSingle() = 0;
+    virtual int         IsSingle() = 0;
 
-	NetPortParser &		GetPortParser() { return ppaddr; }
+    NetPortParser &        GetPortParser() { return ppaddr; }
 
     protected:
-	NetPortParser		ppaddr;		// parsed transport/host/service endpoint
+    NetPortParser        ppaddr;        // parsed transport/host/service endpoint
 } ;
 
 class NetTransport : public KeepAlive {
 
     public:
-	virtual		~NetTransport();
-	virtual void    ClientMismatch( Error *e );
-	virtual void	DoHandshake( Error * /* e */) {} // default: do nothing
+    virtual        ~NetTransport();
+    virtual void    ClientMismatch( Error *e );
+    virtual void    DoHandshake( Error * /* e */) {} // default: do nothing
 
-	virtual StrPtr *GetAddress( int raf_flags ) = 0;
-	virtual StrPtr *GetPeerAddress( int raf_flags ) = 0;
+    virtual StrPtr *GetAddress( int raf_flags ) = 0;
+    virtual StrPtr *GetPeerAddress( int raf_flags ) = 0;
 
-	virtual void	Send( const char *buffer, int length, Error *e ) = 0;
-	virtual int	Receive( char *buffer, int length, Error *e ) = 0;
-	virtual void	Close() = 0;
-	virtual void	SetBreak( KeepAlive *breakCallback ) = 0;
-	virtual int	GetSendBuffering() = 0;
-	virtual int	GetRecvBuffering() = 0;
-	virtual void    GetEncryptionType(StrBuf &value)
-	                {
-			    value.Clear();
-			}
+    virtual void    Send( const char *buffer, int length, Error *e ) = 0;
+    virtual int    Receive( char *buffer, int length, Error *e ) = 0;
+    virtual void    Close() = 0;
+    virtual void    SetBreak( KeepAlive *breakCallback ) = 0;
+    virtual int    GetSendBuffering() = 0;
+    virtual int    GetRecvBuffering() = 0;
+    virtual void    GetEncryptionType(StrBuf &value)
+                    {
+                value.Clear();
+            }
 
-	virtual void    GetPeerFingerprint(StrBuf &value)
-	                {
-			    value.Clear();
-			}
-	// I&O
+    virtual void    GetPeerFingerprint(StrBuf &value)
+                    {
+                value.Clear();
+            }
+    // I&O
 
-	virtual int	SendOrReceive( NetIoPtrs &io, Error *se, Error *re );
+    virtual int    SendOrReceive( NetIoPtrs &io, Error *se, Error *re );
 
-	// DO NOT USE -- experimental only!
+    // DO NOT USE -- experimental only!
 
-	virtual int	GetFd() { return -1; }
+    virtual int    GetFd() { return -1; }
 
 protected:
-	PeekResults	CheckForHandshake(int fd);
-	virtual int	Peek( int fd, char *buffer, int length );
+    PeekResults    CheckForHandshake(int fd);
+    virtual int    Peek( int fd, char *buffer, int length );
 } ;
 
 # endif // # ifndef __NETCONNECT_H__

@@ -7,21 +7,21 @@ template <int>
 class BaseFileSetRequest : public BaseRequest
 {
 public:
-	BaseFileSetRequest(const CommandArgs& args, Connection& conn) : BaseRequest(args, conn)
-	{
-		assets.clear();
-		conn >> assets;
+    BaseFileSetRequest(const CommandArgs& args, Connection& conn) : BaseRequest(args, conn)
+    {
+        assets.clear();
+        conn >> assets;
 
-		if (assets.empty())
-		{
-			assets.clear();
-			conn << assets;
-			conn.EndResponse();
-			invalid = true;
-		}
-	}
+        if (assets.empty())
+        {
+            assets.clear();
+            conn << assets;
+            conn.EndResponse();
+            invalid = true;
+        }
+    }
 
-	VersionedAssetList assets;
+    VersionedAssetList assets;
 };
 
 // Basic requests
@@ -44,18 +44,18 @@ class BaseFileSetResponse : public BaseResponse
 public:
     BaseFileSetResponse(Req& req) : request(req), conn(req.conn) {}
 
-	void Write()
-	{
-		if (request.invalid)
-			return;
-		
-		conn << assets;
-		conn.EndResponse();
-	}
+    void Write()
+    {
+        if (request.invalid)
+            return;
+        
+        conn << assets;
+        conn.EndResponse();
+    }
 
-	Req& request;
-	Connection& conn;
-	VersionedAssetList assets;
+    Req& request;
+    Connection& conn;
+    VersionedAssetList assets;
 };
 
 

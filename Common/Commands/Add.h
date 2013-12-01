@@ -4,12 +4,12 @@
 class AddRequest : public BaseRequest
 {
 public:
-	AddRequest(const CommandArgs& args, Connection& conn) : BaseRequest(args, conn) 
-	{
-		conn >> assetList;
-	}
-	
-	VersionedAssetList assetList;
+    AddRequest(const CommandArgs& args, Connection& conn) : BaseRequest(args, conn) 
+    {
+        conn >> assetList;
+    }
+    
+    VersionedAssetList assetList;
 };
 
 class AddResponse : public BaseReponse

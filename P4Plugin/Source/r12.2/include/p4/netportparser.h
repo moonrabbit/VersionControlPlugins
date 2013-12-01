@@ -11,162 +11,162 @@
 
 class NetPortParser {
 public:
-	enum PPOpts
-	{
-	    PPO_NONE = 0,
-	    PPO_TRANSPORT = 1,
-	    PPO_PORT = 2,
-	    PPO_BOTH = PPO_TRANSPORT | PPO_PORT
-	};
+    enum PPOpts
+    {
+        PPO_NONE = 0,
+        PPO_TRANSPORT = 1,
+        PPO_PORT = 2,
+        PPO_BOTH = PPO_TRANSPORT | PPO_PORT
+    };
 
-	// Orthodox Canonical Form (OCF) methods
-	NetPortParser();
+    // Orthodox Canonical Form (OCF) methods
+    NetPortParser();
 
-	NetPortParser(
-	    const StrRef        &portstr);
+    NetPortParser(
+        const StrRef        &portstr);
 
-	NetPortParser(
-	    const char          *portstr);
+    NetPortParser(
+        const char          *portstr);
 
-	NetPortParser(
-	    const NetPortParser    &rhs);
+    NetPortParser(
+        const NetPortParser    &rhs);
 
-	virtual
-	~NetPortParser();
+    virtual
+    ~NetPortParser();
 
-	virtual const NetPortParser &
-	operator=(
-	    const NetPortParser    &rhs);
+    virtual const NetPortParser &
+    operator=(
+        const NetPortParser    &rhs);
 
-	virtual bool
-	operator==(
-	    const NetPortParser    &rhs) const;
+    virtual bool
+    operator==(
+        const NetPortParser    &rhs) const;
 
-	virtual bool
-	operator!=(
-	    const NetPortParser    &rhs) const;
+    virtual bool
+    operator!=(
+        const NetPortParser    &rhs) const;
 
-	// accessors
+    // accessors
 
-	bool
-	MustRfc3484() const;    // should we follow RFC 3484?
+    bool
+    MustRfc3484() const;    // should we follow RFC 3484?
 
-	bool
-	MayIPv4() const;
+    bool
+    MayIPv4() const;
 
-	bool
-	MayIPv6() const;
+    bool
+    MayIPv6() const;
 
-	bool
-	PreferIPv4() const;
+    bool
+    PreferIPv4() const;
 
-	bool
-	PreferIPv6() const;
+    bool
+    PreferIPv6() const;
 
-	// P4PORT listed IPv6 explicitly
-	bool
-	WantIPv6() const;
+    // P4PORT listed IPv6 explicitly
+    bool
+    WantIPv6() const;
 
-	bool
-	MayRSH() const;
+    bool
+    MayRSH() const;
 
-	bool
-	MustRSH() const;
+    bool
+    MustRSH() const;
 
-	bool
-	MustSSL() const;
+    bool
+    MustSSL() const;
 
-	bool
-	MustIPv4() const;
+    bool
+    MustIPv4() const;
 
-	bool
-	MustIPv6() const;
+    bool
+    MustIPv6() const;
 
-	const StrBuf &
-	Transport() const
-	{
-	    return mTransport;
-	}
+    const StrBuf &
+    Transport() const
+    {
+        return mTransport;
+    }
 
-	const StrPtr &
-	Port() const
-	{
-	    return mPort;
-	}
+    const StrPtr &
+    Port() const
+    {
+        return mPort;
+    }
 
-	int
-	PortNum() const;
+    int
+    PortNum() const;
 
-	const StrPtr &
-	Host() const
-	{
-	    return mHost;
-	}
+    const StrPtr &
+    Host() const
+    {
+        return mHost;
+    }
 
-	const StrPtr &
-	HostPort() const
-	{
-	    return mHostPort;
-	}
+    const StrPtr &
+    HostPort() const
+    {
+        return mHostPort;
+    }
 
-	const StrBuf &
-	String() const
-	{
-	    return mPortString;
-	}
+    const StrBuf &
+    String() const
+    {
+        return mPortString;
+    }
 
-	// construct a StrBuf from the requested pieces
-	const StrBuf
-	String(PPOpts opts) const;
-
-
-	// mutators
+    // construct a StrBuf from the requested pieces
+    const StrBuf
+    String(PPOpts opts) const;
 
 
-	// Other methods
-	void
-	Parse();
+    // mutators
 
-	void
-	Parse(const StrRef &portstr);
+
+    // Other methods
+    void
+    Parse();
+
+    void
+    Parse(const StrRef &portstr);
 
 protected:
 
 private:
-	enum PrefixType
-	{
-	    PT_NONE,
-	    PT_RSH,
-	    PT_TCP,
-	    PT_TCP4,
-	    PT_TCP6,
-	    PT_TCP46,
-	    PT_TCP64,
-	    PT_SSL,
-	    PT_SSL4,
-	    PT_SSL6,
-	    PT_SSL46,
-	    PT_SSL64
-	};
+    enum PrefixType
+    {
+        PT_NONE,
+        PT_RSH,
+        PT_TCP,
+        PT_TCP4,
+        PT_TCP6,
+        PT_TCP46,
+        PT_TCP64,
+        PT_SSL,
+        PT_SSL4,
+        PT_SSL6,
+        PT_SSL46,
+        PT_SSL64
+    };
 
-	struct Prefix
-	{
-	    const char    *mName;
-	    PrefixType    mType;
-	};
+    struct Prefix
+    {
+        const char    *mName;
+        PrefixType    mType;
+    };
 
-	StrBuf    mPortString;    // saved P4PORT (or -p) input string
-	StrBuf    mTransport;     // parsed transport prefix string
-	StrBuf    mHost;          // parsed host string
-	StrBuf    mPort;          // parsed port string
-	StrBuf    mHostPort;      // parsed host+port string
-	Prefix    mPrefix;        // parsed transport prefix
+    StrBuf    mPortString;    // saved P4PORT (or -p) input string
+    StrBuf    mTransport;     // parsed transport prefix string
+    StrBuf    mHost;          // parsed host string
+    StrBuf    mPort;          // parsed port string
+    StrBuf    mHostPort;      // parsed host+port string
+    Prefix    mPrefix;        // parsed transport prefix
 
 private:
 
-	const Prefix *
-	FindPrefix(
-	    const char    *prefix,
-	    int           len);
+    const Prefix *
+    FindPrefix(
+        const char    *prefix,
+        int           len);
 };
 
